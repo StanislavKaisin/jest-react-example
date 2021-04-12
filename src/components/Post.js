@@ -19,7 +19,7 @@ export const Post = ({
         <span className="date">
           {created_at ? new Date(created_at).toLocaleString() : "Nodate"}
         </span>
-        <span className="aythor">{author}</span>
+        <span className="author">{author}</span>
       </div>
     </li>
   );

@@ -23,10 +23,12 @@ module.exports = {
         ["@babel/preset-env", { modules: false }],
         "@babel/preset-flow",
         "@babel/preset-react",
+        "@babel/plugin-syntax-jsx",
       ],
       plugins: [
         "@babel/plugin-syntax-dynamic-import",
         "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-syntax-jsx",
       ],
     },
     development: {
@@ -34,10 +36,12 @@ module.exports = {
         ["@babel/preset-env", { modules: false }],
         "@babel/preset-flow",
         "@babel/preset-react",
+        "@babel/plugin-syntax-jsx",
       ],
       plugins: [
         "@babel/plugin-syntax-dynamic-import",
         "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-syntax-jsx",
       ],
     },
   },
