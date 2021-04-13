@@ -15,7 +15,7 @@ describe("should render Post component", () => {
   it("should contain .post wrapper", () => {
     const wrapper = component.find(".post");
     expect(wrapper.length).toBe(1);
-    console.log(component.debug());
+    // console.log(component.debug());
   });
 
   it("should contain link", () => {
