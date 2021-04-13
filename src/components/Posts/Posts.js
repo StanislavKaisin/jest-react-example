@@ -1,5 +1,5 @@
 import React from "react";
-import { Post } from "./Post";
+import { Post } from "../Post/Post";
 
 const NEWS = [
   {
@@ -25,6 +25,7 @@ const NEWS = [
 export const Posts = () => {
   return (
     <ul className="newsList">
+      <li>test</li>
       {NEWS.map(
         ({
           author,
