@@ -2,6 +2,19 @@ import { render, shallow } from "enzyme";
 import { Posts } from "./Posts";
 import React from "react";
 
+import {
+  NEWS,
+  BASE_PATH,
+  SEARCH_PATH,
+  SEARCH_PARAM,
+  PAGE_HITS,
+  PAGE_PARAM,
+} from "./constants";
+
+const mockJsonPromise = Promise.resolve({ hits: NEWS, page: 1, nbPages: 10 });
+const mockFetchPromise = Promise.resolve({ json: () => mockJsonPromise });
+global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
+
 const setUp = () => {
   return shallow(<Posts />);
 };
@@ -39,6 +52,55 @@ describe("Posts component", () => {
       instance.setState({ page: DEFAULT_PAGE });
       instance.getSearch({ key: "a" });
       expect(component.state().page).toBe(DEFAULT_PAGE);
+    });
+  });
+
+  it("should call fetch in componentDidMount", () => {
+    expect(global.fetch).toHaveBeenCalledWith(
+      `${BASE_PATH}${SEARCH_PATH}?${SEARCH_PARAM}${""}&${PAGE_HITS}${20}&${PAGE_PARAM}${0}`
+    );
+  });
+
+  describe("udatePage method", () => {
+    it("should update state 'page'", () => {
+      instance.updatePage(DEFAULT_PAGE);
+      expect(component.state().page).toBe(DEFAULT_PAGE);
+    });
+
+    it("should call fetch with given arguments", () => {
+      instance.updatePage(DEFAULT_PAGE);
+      expect(global.fetch).toHaveBeenCalledWith(
+        `${BASE_PATH}${SEARCH_PATH}?${SEARCH_PARAM}${""}&${PAGE_HITS}${20}&${PAGE_PARAM}${0}`
+      );
+    });
+  });
+
+  describe("handlePageChange method", () => {
+    it("should call 'updatePage' with given argument", () => {
+      instance.updatePage = jest.fn();
+      instance.setState({ page: DEFAULT_PAGE });
+      instance.handlePageChange({
+        target: { getAttribute: jest.fn().mockReturnValue("1") },
+      });
+      expect(instance.updatePage).toHaveBeenCalledWith(1);
+    });
+
+    it("should call 'updatePage' with increased value", () => {
+      instance.updatePage = jest.fn();
+      instance.setState({ page: DEFAULT_PAGE });
+      instance.handlePageChange({
+        target: { getAttribute: jest.fn().mockReturnValue("prev") },
+      });
+      expect(instance.updatePage).toHaveBeenCalledWith(DEFAULT_PAGE - 1);
+    });
+
+    it("should call 'updatePage' with decreased value", () => {
+      instance.updatePage = jest.fn();
+      instance.setState({ page: DEFAULT_PAGE });
+      instance.handlePageChange({
+        target: { getAttribute: jest.fn().mockReturnValue("next") },
+      });
+      expect(instance.updatePage).toHaveBeenCalledWith(DEFAULT_PAGE + 1);
     });
   });
 
@@ -95,79 +157,7 @@ describe("Posts component", () => {
         </div>
         <ul
           class="newsList"
-        >
-          <li>
-            test
-          </li>
-          <li
-            class="post"
-          >
-            <div
-              class="description"
-            >
-              <a
-                class="title"
-                href="//test.url"
-              >
-                Jest & Enzyme
-              </a>
-              <span
-                class="text"
-              >
-                100 points
-              </span>
-              <span
-                class="comments"
-              >
-                10 comments
-              </span>
-              <span
-                class="date"
-              >
-                04.05.2020, 02:36:09
-              </span>
-              <span
-                class="author"
-              >
-                Yauhen
-              </span>
-            </div>
-          </li>
-          <li
-            class="post"
-          >
-            <div
-              class="description"
-            >
-              <a
-                class="title"
-                href="//test2121.url"
-              >
-                TypeScript Basics
-              </a>
-              <span
-                class="text"
-              >
-                10 points
-              </span>
-              <span
-                class="comments"
-              >
-                8 comments
-              </span>
-              <span
-                class="date"
-              >
-                06.05.2020, 02:36:09
-              </span>
-              <span
-                class="author"
-              >
-                Stepan
-              </span>
-            </div>
-          </li>
-        </ul>
+        />
       </div>
     `);
   });
